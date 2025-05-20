@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Text Summarizer</title>
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-color: #f4f6f8;
+            padding: 40px;
+            max-width: 900px;
+            margin: auto;
+        }
+        h1 {
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            font-size: 1rem;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            resize: vertical;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .summary-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .error {
+            color: red;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>📘 AI Text Summarizer</h1>
+    <script>
+        function showLoading() {
+            document.getElementById("loading").style.display = "block";
+        }
+    </script>
+    
+    <form method="post" enctype="multipart/form-data" onsubmit="showLoading()">
+        {% csrf_token %}
+        <textarea name="text" placeholder="Paste or write your paragraph here...">{{ request.POST.text }}</textarea>
+        <br><br>
+        <label for="docx_file">Or upload a Word document (.docx):</label><br>
+        <input type="file" name="docx_file" accept=".docx">
+        <br>
+        <button type="submit">Summarize</button>
+    </form>
+    
+
+    {% if summary %}
+<div class="summary-box">
+    <h3>🧠 Summary (Point-wise Extended):</h3>
+    <ul>
+        {% for point in summary %}
+            <li>{{ point }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+    <div id="loading" style="display:none; margin-top: 20px; font-weight: bold;">
+        🔄 Please wait... Summarizing your text...
+    </div>
+</body>
+</html>
